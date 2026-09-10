@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import ast; ast.parse\\(open\\(r'c:\\\\Users\\\\Kelatos\\\\Downloads\\\\BOT-WSP-main\\\\openai_service.py', encoding='utf-8'\\).read\\(\\)\\); print\\('OK'\\)\")",
+      "Bash(python -c \"from datetime import datetime; from zoneinfo import ZoneInfo; now=datetime.now\\(ZoneInfo\\('Europe/Madrid'\\)\\); print\\(now.strftime\\('%A %d/%m/%Y %H:%M'\\)\\)\")",
+      "Bash(pip install *)",
+      "Bash(python -c \"from openai_service import _now_madrid; print\\(_now_madrid\\(\\)\\)\")",
+      "Bash(python -c ' *)",
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(grep -E \"\\\\.py$|\\\\.txt$|\\\\.md$\")"
+    ]
+  }
+}

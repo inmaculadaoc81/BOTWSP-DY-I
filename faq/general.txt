@@ -1,0 +1,76 @@
+[INFORMACIÓN GENERAL DE KELATOS INFORMÁTICA — SERVICIO DYSON]
+
+⚠️ ÁMBITO: Este número atiende ÚNICAMENTE equipos Dyson (servicio DysonTech / DyFix).
+Cualquier otra marca, equipo o servicio ajeno a Dyson está FUERA DE ÁMBITO en este canal.
+
+QUIÉNES SOMOS:
+- Somos un servicio técnico independiente, NO oficial ni autorizado de Dyson ni de ninguna marca.
+- Si el equipo está en garantía de fabricante, el cliente debe contactar con el servicio oficial de Dyson.
+- Trabajamos con piezas de alta calidad; cuando es posible, usamos piezas originales.
+- La garantía de nuestras reparaciones es de 6 meses sobre el trabajo realizado.
+
+UBICACIÓN Y HORARIOS:
+- Dirección: Calle Joaquín María López 26, Madrid, España.
+- Referencia: cerca del metro Islas Filipinas. En la puerta hay un cartel que dice "Kelatos" (útil si el cliente está en la calle y no localiza el local).
+- Metro: Línea 7 (Islas Filipinas) o Líneas 3 y 6 (Moncloa).
+- Parking: no tenemos propio. Hay parking público en Calle Blasco de Garay 61, junto al supermercado BM.
+- Horario local: lunes a viernes, 09:30 a 18:00 (horario continuo).
+- Sábados, domingos y festivos: cerrado.
+- Después de las 18:00 no podemos recibir ni devolver equipos (ni "cinco minutos tarde").
+- Horario para agendar cita con técnico: solo 10:00 a 17:00.
+
+CONTACTO:
+- Teléfono: +34 914 468 503
+- WhatsApp: +34 606 806 376 (solo mensajes escritos, no audios).
+- Correo: soporte@kelatos.com
+
+DIAGNÓSTICO Y PRESUPUESTO:
+- Diagnóstico GRATUITO para equipos Dyson.
+- Plazo habitual de diagnóstico/presupuesto: 24-48 horas (puede variar según carga y repuestos).
+- Diagnóstico express (urgencia): 50€ + IVA, revisión en aprox. 2 horas. NO se descuenta de la reparación.
+- No se puede dar presupuesto exacto sin revisar el equipo en persona.
+- Solo se paga si la reparación se realiza con éxito. Si el cliente no acepta el presupuesto, no paga nada.
+
+CITA:
+- No es obligatorio pedir cita previa para dejar un equipo.
+- Si el cliente prefiere cita, solo se agenda entre 10:00 y 17:00, de lunes a viernes. No se puede agendar en fines de semana ni en festivos oficiales de Madrid/España.
+- Para agendar cita se pide: nombre, correo, teléfono, día y hora.
+- No confirmar cita si falta alguno de esos datos ni si el horario no está disponible.
+
+RECOGIDA Y ENVÍO A DOMICILIO:
+- Coste de recogida: 15€ por equipo. Coste de envío de vuelta: 15€ por equipo.
+- Solo disponible en península de España (no islas).
+- Solo de lunes a viernes.
+- ⚠️ AVISO IMPORTANTE: Actualmente Correos no permite elegir día de recogida. Se solicita la recogida pero NO se puede confirmar cuándo pasará el mensajero. NUNCA confirmar ni prometer fecha ni hora de recogida al cliente.
+- Antes de solicitar la recogida a Correos, el cliente debe abonar los 15€ y enviar el justificante de pago (por WhatsApp o correo). Este paso puede demorar el proceso de recogida.
+- Correos exige el DNI, NIE o CIF del remitente (persona o empresa) para tramitar cualquier recogida. Es obligatorio pedírselo al cliente.
+- Tras la recogida, suele tardar en llegar 48 a 72 horas.
+- Para recogida se pide: nombre, DNI/NIE/CIF, correo, dirección, código postal, ciudad y teléfono. NO pedir día preferido (Correos decide).
+- Dyson entra en recogida a domicilio. Coste: 15€ recogida + 15€ envío de vuelta.
+- Para envío de vuelta al cliente: solo si el estado es Reparado, Presupuesto Rechazado o No tiene Reparación. Se pide: nombre completo, dirección, CP y ciudad.
+
+PAGOS:
+- Métodos: tarjeta Visa/Mastercard y transferencia bancaria.
+- IVA siempre: 21%. Siempre emitimos factura.
+- No se evita IVA. No ofrecemos financiación ni pagos a plazos.
+- Transferencia: añadir el nombre en el concepto y enviar justificante por WhatsApp o correo (debe incluir número de cuenta utilizado).
+- Cuentas bancarias (Titular: Affirma Technology Group S.L.):
+  * Banco Santander: ES5800494943352116103259
+  * BBVA: ES2201820972140201688870
+  * CaixaBank: ES3121001098170200090497
+  * Banco Sabadell: ES7000810594710001696278
+
+REPUESTOS Y PIEZAS DYSON:
+- Contamos con repuestos originales para algunos modelos (según stock). Si no hay, se pide (plazos variables).
+- Ofrecemos también repuestos compatibles de alta calidad.
+- Para localizar una pieza hace falta el modelo exacto del equipo Dyson (p. ej. V8, V10, V11, Supersonic) y, si es posible, el código de la pieza. No pedir foto: el bot no puede verlas. Si el cliente no tiene el modelo, indicar que traiga el equipo al local para identificarlo.
+- No inventar stock ni precio de pieza suelta sin confirmar.
+
+SERVICIOS QUE NO REALIZAMOS (nunca ofrecer ni insinuar):
+- Piratería, hackeo, modificaciones ilegales, flasheos ilegales, servicios fuera de la ley.
+- Dyson 360eye (única exclusión dentro de la marca Dyson).
+- Cualquier equipo o marca que no sea Dyson: no se atiende en este número (ver ÁMBITO arriba).
+
+REPARACIONES / CASOS AUTORIZADOS:
+- Reparación y servicio técnico de productos Dyson: aspiradoras de mano y de suelo, secadores, moldeadores/línea profesional, ventiladores, purificadores y humidificadores (ver FAQ DYSON para el detalle de modelos).
+- Excepción: Dyson 360eye no se repara.
