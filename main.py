@@ -29,7 +29,7 @@ from chatwoot_service import ChatwootService
 # Odoo DESCONECTADO - reemplazado por EspoCRM.
 # from odoo_service import OdooService
 from espocrm_service import EspoCRMService
-from intent_classifier import classify_intent
+from intent_classifier import classify_intent, KNOWN_BRANDS
 from faq_service import load_brand_faq
 from calendar_service import CalendarService, process_ai_calendar_command
 
@@ -93,6 +93,40 @@ BUDGET_DECISION_RESPONSE = (
     "electrónico en el que te lo enviamos. Por WhatsApp no podemos gestionar esa "
     "confirmación. 😊"
 )
+
+# WhatsApp de atención general de Kelatos (todas las marcas del grupo salvo
+# Dyson, que se atiende en este número). Ver "NOMBRES COMERCIALES DE KELATOS"
+# en config.py para la lista completa de marcas gestionadas.
+KELATOS_GENERAL_WHATSAPP = "+34 649 970 128"
+
+# Nombre a mostrar para cada slug de KNOWN_BRANDS (intent_classifier.py) que no
+# quede bien con un simple .capitalize().
+_BRAND_DISPLAY_NAMES = {
+    "msi": "MSI",
+    "hp": "HP",
+    "thinkcentre": "ThinkCentre",
+    "thinkpad": "ThinkPad",
+    "kitchenaid": "KitchenAid",
+    "mouli": "Moulinex",
+}
+
+
+def _out_of_scope_brand_redirect(brand: str) -> str:
+    """Respuesta fija cuando el cliente menciona una marca del grupo Kelatos
+    que no es Dyson (ver KNOWN_BRANDS). Esta regla ("¿la reparamos? sí/no")
+    depende de que el LLM interprete correctamente un prompt muy largo y en
+    produccion ha fallado repetidas veces (decia "no reparamos Dell/Conga"
+    siendo falso) — se intercepta en código para garantizar la respuesta
+    correcta, igual que ya se hace con la aceptación/rechazo de presupuesto.
+    """
+    display_name = _BRAND_DISPLAY_NAMES.get(brand, brand.capitalize())
+    return (
+        f"¡Sí, en Kelatos gestionamos productos {display_name}! 😊\n\n"
+        "Este número solo atiende Dyson, así que para eso escríbenos a nuestro "
+        "WhatsApp de atención general de Kelatos:\n"
+        f"*{KELATOS_GENERAL_WHATSAPP}*\n\n"
+        "Allí te confirman todos los detalles 👍"
+    )
 
 # Etiqueta que n8n añade a la conversación mientras espera la respuesta del
 # cliente a la encuesta de satisfacción. Si está presente, el bot debe
@@ -402,6 +436,10 @@ async def receive_message(request: Request):
         if _is_budget_decision(text, history):
             ai_response = BUDGET_DECISION_RESPONSE
             logger.info("Budget decision intercepted (WhatsApp), returning fixed response.")
+        elif intent.brand and intent.brand != "dyson" and intent.brand in KNOWN_BRANDS:
+            # Intercept: marca del grupo Kelatos que no es Dyson — respuesta fija, sin LLM
+            ai_response = _out_of_scope_brand_redirect(intent.brand)
+            logger.info(f"Out-of-scope brand '{intent.brand}' intercepted (WhatsApp), returning fixed redirect.")
         else:
         # Generate AI response
             ai_response = await openai_svc.generate_response(
@@ -1008,6 +1046,10 @@ async def chatwoot_webhook(request: Request):
         if _is_budget_decision(content, history):
             ai_response = BUDGET_DECISION_RESPONSE
             logger.info("Budget decision intercepted (Chatwoot), returning fixed response.")
+        elif intent.brand and intent.brand != "dyson" and intent.brand in KNOWN_BRANDS:
+            # Intercept: marca del grupo Kelatos que no es Dyson — respuesta fija, sin LLM
+            ai_response = _out_of_scope_brand_redirect(intent.brand)
+            logger.info(f"Out-of-scope brand '{intent.brand}' intercepted (Chatwoot), returning fixed redirect.")
         else:
         # Generate AI response
             ai_response = await openai_svc.generate_response(

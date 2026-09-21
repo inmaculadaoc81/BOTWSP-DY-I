@@ -26,8 +26,9 @@ _BRAND_ALIASES = {
 # fichero de FAQ propio en faq/ (solo Dyson lo tiene). Sin esta lista,
 # list_available_brands() por si sola descartaba marcas validas como "dell" o
 # "conga" por considerarlas desconocidas, aunque si eran una marca real de la
-# empresa.
-_KNOWN_BRANDS = {
+# empresa. Publica (sin "_") porque main.py tambien la usa para interceptar
+# en codigo la redireccion al WhatsApp general, sin depender del LLM.
+KNOWN_BRANDS = {
     "medion", "msi", "surface", "asus", "toshiba", "gigabyte", "lenovo",
     "thinkcentre", "thinkpad", "mac", "apple", "razer", "dell", "alienware",
     "hp", "acer", "braun", "philips", "bosch", "thermomix", "kitchenaid",
@@ -74,7 +75,7 @@ async def classify_intent(
 ) -> IntentResult:
     """Lightweight classification to determine what context is needed."""
     brands = list_available_brands()
-    known_brands = sorted(set(brands) | _KNOWN_BRANDS)
+    known_brands = sorted(set(brands) | KNOWN_BRANDS)
     brands_str = ", ".join(known_brands)
 
     system_prompt = (
