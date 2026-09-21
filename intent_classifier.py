@@ -21,6 +21,21 @@ _BRAND_ALIASES = {
     "cecotec": "conga",
 }
 
+# Marcas de fabricante que Kelatos gestiona bajo sus propios nombres comerciales
+# (ver "NOMBRES COMERCIALES DE KELATOS" en config.py), aunque no tengan un
+# fichero de FAQ propio en faq/ (solo Dyson lo tiene). Sin esta lista,
+# list_available_brands() por si sola descartaba marcas validas como "dell" o
+# "conga" por considerarlas desconocidas, aunque si eran una marca real de la
+# empresa.
+_KNOWN_BRANDS = {
+    "medion", "msi", "surface", "asus", "toshiba", "gigabyte", "lenovo",
+    "thinkcentre", "thinkpad", "mac", "apple", "razer", "dell", "alienware",
+    "hp", "acer", "braun", "philips", "bosch", "thermomix", "kitchenaid",
+    "taurus", "mycook", "xiaomi", "rowenta", "pacojet", "cecotec", "conga",
+    "mambo", "kobold", "vitamix", "roomba", "moulinex", "mouli", "magimix",
+    "cuisinart", "ninja", "huawei",
+}
+
 
 def _normalize_brand_text(value: str) -> str:
     normalized = unicodedata.normalize("NFKD", value.lower())
@@ -59,7 +74,8 @@ async def classify_intent(
 ) -> IntentResult:
     """Lightweight classification to determine what context is needed."""
     brands = list_available_brands()
-    brands_str = ", ".join(brands)
+    known_brands = sorted(set(brands) | _KNOWN_BRANDS)
+    brands_str = ", ".join(known_brands)
 
     system_prompt = (
         "Eres un clasificador para un bot de WhatsApp de un servicio técnico de reparaciones. "
@@ -147,14 +163,14 @@ async def classify_intent(
             brand=data.get("brand"),
         )
 
-        explicit_brand = _detect_explicit_brand(user_message, brands)
+        explicit_brand = _detect_explicit_brand(user_message, known_brands)
         if explicit_brand:
             result.brand = explicit_brand
         elif result.brand:
             result.brand = _BRAND_ALIASES.get(_normalize_brand_text(result.brand), result.brand)
 
         # Validate brand against known list
-        if result.brand and _normalize_brand_text(result.brand) not in brands:
+        if result.brand and _normalize_brand_text(result.brand) not in known_brands:
             logger.warning(f"Unknown brand '{result.brand}', ignoring")
             result.brand = None
         elif result.brand:
