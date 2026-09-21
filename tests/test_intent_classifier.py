@@ -49,6 +49,21 @@ class TestClassifyIntent:
         result = await classify_intent(client, "mi DYSON")
         assert result.brand == "dyson"
 
+    async def test_explicit_conga_brand_is_preserved_when_model_returns_null(self, client):
+        self._setup_response(client, '{"needs_repair_lookup": false, "needs_prices": false, "wants_appointment": false, "brand": null}')
+        result = await classify_intent(client, "mi Conga 6090 no funciona")
+        assert result.brand == "conga"
+
+    async def test_cecotec_alias_uses_conga_faq(self, client):
+        self._setup_response(client, '{"needs_repair_lookup": false, "needs_prices": false, "wants_appointment": false, "brand": "cecotec"}')
+        result = await classify_intent(client, "tengo un robot Cecotec")
+        assert result.brand == "conga"
+
+    async def test_explicit_dell_brand_overrides_wrong_model_brand(self, client):
+        self._setup_response(client, '{"needs_repair_lookup": false, "needs_prices": false, "wants_appointment": false, "brand": "dyson"}')
+        result = await classify_intent(client, "necesito reparar un portátil Dell")
+        assert result.brand == "dell"
+
     async def test_needs_human(self, client):
         self._setup_response(client, '{"needs_repair_lookup": false, "needs_prices": false, "wants_appointment": false, "needs_human": true, "brand": null}')
         result = await classify_intent(client, "quiero hablar con un tecnico")
