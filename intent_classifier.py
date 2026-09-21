@@ -1,5 +1,7 @@
 import json
 import logging
+import re
+import unicodedata
 from dataclasses import dataclass
 
 from openai import AsyncOpenAI
@@ -10,6 +12,34 @@ logger = logging.getLogger(__name__)
 
 CLASSIFIER_MODEL = "gpt-4o-mini"
 CLASSIFIER_MAX_TOKENS = 100
+
+
+# Algunos nombres que usa el cliente no coinciden con el nombre del archivo FAQ.
+# La deteccion local evita que una respuesta variable del clasificador elimine el
+# contexto de una marca que aparece literalmente en el mensaje.
+_BRAND_ALIASES = {
+    "cecotec": "conga",
+}
+
+
+def _normalize_brand_text(value: str) -> str:
+    normalized = unicodedata.normalize("NFKD", value.lower())
+    return "".join(char for char in normalized if not unicodedata.combining(char))
+
+
+def _detect_explicit_brand(user_message: str, brands: list[str]) -> str | None:
+    message = _normalize_brand_text(user_message)
+    candidates = {}
+    for brand in brands:
+        normalized = _normalize_brand_text(brand)
+        candidates[normalized] = brand
+    candidates.update(_BRAND_ALIASES)
+
+    # Longer names first prevents a short name from winning inside a compound name.
+    for name in sorted(candidates, key=len, reverse=True):
+        if re.search(rf"(?<!\w){re.escape(name)}(?!\w)", message):
+            return candidates[name]
+    return None
 
 
 @dataclass
@@ -117,12 +147,18 @@ async def classify_intent(
             brand=data.get("brand"),
         )
 
+        explicit_brand = _detect_explicit_brand(user_message, brands)
+        if explicit_brand:
+            result.brand = explicit_brand
+        elif result.brand:
+            result.brand = _BRAND_ALIASES.get(_normalize_brand_text(result.brand), result.brand)
+
         # Validate brand against known list
-        if result.brand and result.brand.lower() not in brands:
+        if result.brand and _normalize_brand_text(result.brand) not in brands:
             logger.warning(f"Unknown brand '{result.brand}', ignoring")
             result.brand = None
         elif result.brand:
-            result.brand = result.brand.lower()
+            result.brand = _normalize_brand_text(result.brand)
 
         # Fallback: si el mensaje contiene palabras de precio y no se activó needs_prices, forzarlo.
         # Cubre casos donde gpt-4o-mini clasifica como consulta de reparación pero no de precio.
