@@ -88,6 +88,16 @@ class KelatosApiService:
                     params=params,
                 )
                 if resp.status_code == 404:
+                    # Un 404 real de la API es JSON. Un 404 en HTML/texto
+                    # (p.ej. Vercel "DEPLOYMENT_NOT_FOUND" por una
+                    # KELATOS_API_BASE_URL antigua) es un fallo de
+                    # configuracion, no un resguardo inexistente.
+                    if "application/json" not in resp.headers.get("content-type", ""):
+                        logger.error(
+                            f"Kelatos API 404 no-JSON en {path} (URL base mal configurada?): "
+                            f"{resp.text[:200]}"
+                        )
+                        raise KelatosApiUnavailable(f"404 no-JSON en {self.base_url}{path}")
                     return None
                 resp.raise_for_status()
                 return resp.json()

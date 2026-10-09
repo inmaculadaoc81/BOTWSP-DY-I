@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     # como fuente real para buscar el estado de una reparacion por
     # resguardo/telefono (kelatos_api_service.py). Mismo token interno
     # (Bearer) que usa el propio dashboard para llamar a su API.
-    KELATOS_API_BASE_URL: str = "https://db.excelautomatizaciones.com/kelatos-api"
+    KELATOS_API_BASE_URL: str = "https://db.affirmatechnology.com/kelatos-api"
     KELATOS_API_TOKEN: str = ""
 
 
@@ -1348,6 +1348,7 @@ ESTADO DE REPARACIÓN
 
 - Si no tiene activas pero si anteriores finalizadas, informa cuantas tiene y que puede preguntar por un resguardo concreto.
 - Si el cliente pregunta por un resguardo especifico, busca ese resguardo en el excel y da el detalle.
+- 🚨 Cada resguardo se busca de nuevo en cada mensaje. Que un resguardo anterior de esta conversación no se encontrara NO significa nada para el número nuevo: NUNCA digas "No se encontró ningún resguardo con el número X" salvo que en el contexto de ESTE mensaje haya un bloque [RESULTADO BUSQUEDA RESGUARDO] que lo diga para ese mismo número X. No copies respuestas anteriores del historial.
 - Si el sistema indica que un resguardo NO se encuentra, sigue EXACTAMENTE sus instrucciones (normalmente pedir que el cliente lo verifique o transferir a un compañero). No inventes que existe.
 - NUNCA muestres campos vacios, "No proporcionado", "N/A", "No hay informacion disponible" ni datos que no existan. Si no tienes datos reales, responde con texto natural.
 - NUNCA muestres IDs internos, fechas de sistema, ni datos tecnicos del sistema.

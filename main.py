@@ -397,7 +397,7 @@ async def receive_message(request: Request):
         if session_context_wa:
             extra_context_parts.append(session_context_wa)
 
-        needs_repair = intent.needs_repair_lookup
+        needs_repair = intent.needs_repair_lookup or _looks_like_resguardo(text)
         if needs_repair:
             repair_ctx = await _repair_lookup(sender, text)
             if repair_ctx:
@@ -601,6 +601,18 @@ async def _handle_handoff(sender_key: str, conversation_id: int | None = None):
 # ── Repair lookup helper ──────────────────────────────────────────────
 
 _RESGUARDO_RE = re.compile(r"\b(\d{4,6})\b")
+
+
+def _looks_like_resguardo(message: str) -> bool:
+    """Red de seguridad por codigo: el clasificador a veces no marca
+    needs_repair_lookup cuando el cliente manda solo el numero ("19369",
+    "y este 19369") y entonces el modelo copia del historial un "No se
+    encontro ningun resguardo" sin haber buscado. Fuerza la busqueda si hay
+    un numero de 4-6 digitos y el mensaje es corto o menciona el resguardo
+    (no en mensajes largos: "macbook pro 2010 ..." no es un resguardo)."""
+    if not _RESGUARDO_RE.search(message):
+        return False
+    return "resguardo" in message.lower() or len(message.split()) <= 6
 
 
 async def _repair_lookup(phone: str, message: str) -> str | None:
@@ -1007,7 +1019,7 @@ async def chatwoot_webhook(request: Request):
             )
             logger.info(f"Returning session detected for {sender_key} (gap: {gap_hours:.1f}h)")
 
-        needs_repair = intent.needs_repair_lookup
+        needs_repair = intent.needs_repair_lookup or _looks_like_resguardo(content)
         if needs_repair:
             repair_ctx = await _repair_lookup(phone or "", content)
             if repair_ctx:
