@@ -317,16 +317,18 @@ class SheetsService:
         lines.append("Ejemplos: 'cambio de carcasa' = 'Reemplazo de carcasa'; 'gatillo roto' = 'Cambio de gatillo'; 'no carga' podría ser batería o placa.")
         lines.append("")
         lines.append("CASO A — El cliente pregunta precio y la coincidencia es clara:")
-        lines.append("  Da el precio directamente. Formato: '🔧 [Tipo de reparación]: [precio]+IVA'.")
+        lines.append("  Da el precio directamente, SIEMPRE en negrita. Formato: '🔧 [Tipo de reparación]: *[precio]+IVA*'.")
         lines.append("  ❌ No copies la fila entera. ❌ No digas 'prefiero no darte precio sin revisar' si el precio ya está aquí.")
+        lines.append("  ❌ PROHIBIDO mostrar el precio sin negrita (*...*).")
         lines.append("  ⚠️ Dar el precio directo NO te exime del resto del protocolo: si el bloque de ventajas/garantía todavía no se mostró en esta conversación, inclúyelo igualmente (una sola vez) en la misma respuesta que da el precio.")
         lines.append("")
         lines.append("CASO B — El cliente pregunta precio pero no está claro qué servicio exacto necesita:")
-        lines.append("  Muestra MÁXIMO 3 opciones numeradas de esa marca/modelo, elige las más probables:")
+        lines.append("  Muestra MÁXIMO 3 opciones numeradas de esa marca/modelo, elige las más probables, con el precio SIEMPRE en negrita:")
         lines.append("  '¿Te refieres a alguna de estas opciones?")
-        lines.append("  1. [Tipo reparación A] — [precio]+IVA")
-        lines.append("  2. [Tipo reparación B] — [precio]+IVA")
+        lines.append("  1. [Tipo reparación A] — *[precio]+IVA*")
+        lines.append("  2. [Tipo reparación B] — *[precio]+IVA*")
         lines.append("  ¿Es alguna de estas, u otra cosa?'")
+        lines.append("  ❌ PROHIBIDO mostrar el precio sin negrita (*...*).")
         lines.append("")
         lines.append("CASO C — El servicio no está en la tabla:")
         lines.append("  Indica que ese servicio requiere revisión en tienda para dar presupuesto.")
@@ -484,8 +486,11 @@ class SheetsService:
                 tipo_data[categoria] = {}
             if marca not in tipo_data[categoria]:
                 tipo_data[categoria][marca] = []
-            if caract:
-                tipo_data[categoria][marca].append((modelo_corto, caract))
+            # No descartar el equipo por tener "caracteristicas" vacio en el
+            # dashboard: sigue siendo stock disponible (ya paso el filtro de
+            # estado/defectos/observaciones) y debe listarse igual, aunque
+            # sea solo con el identificador marca+modelo.
+            tipo_data[categoria][marca].append((modelo_corto, caract or "sin detalle de características registrado"))
 
         lines = ["[EQUIPOS DISPONIBLES PARA ALQUILER]"]
         lines.append(f"Total equipos disponibles en stock: {len(equipos)}")

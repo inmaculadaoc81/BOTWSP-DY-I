@@ -125,6 +125,12 @@ async def classify_intent(
         "de que el propio chat/bot no le entiende. Ejemplos que son needs_repair_lookup=true y needs_human=false: "
         "'tengo este codigo 18215', 'queria saber situacion de un ordenador que deje, el resguardo es el "
         "numero 18215, me indicaron que estaria antes del 17 de agosto y no es asi, decirme algo'.\n"
+        "IMPORTANTE: si el usuario declina una oferta del bot o insiste/repite su necesidad (ej: que "
+        "necesita el servicio en otra ciudad/ubicacion distinta a la que ofrece el bot), aunque empiece "
+        "con 'No' o cierre con 'gracias' (tono de despedida), eso NO es needs_human=true. Es una "
+        "respuesta normal de la conversacion — el bot debe seguir aclarando o reformulando su oferta, "
+        "no transferir. Ejemplo que NO es needs_human: 'No, necesito algo en Bilbao. Gracias.' (tras el "
+        "bot haber ofrecido algo en Madrid) — needs_human=false, el bot debe seguir atendiendo.\n"
         '- "needs_rental_lookup": true si el usuario pregunta qué equipos hay disponibles para alquilar, '
         "qué modelos tienen, si tienen gaming/Mac/Windows/Surface para alquiler, qué portátiles tienen, "
         "disponibilidad de equipos de alquiler, o cualquier consulta sobre el catálogo o stock de alquiler.\n"
