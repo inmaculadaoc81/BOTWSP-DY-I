@@ -1152,3 +1152,31 @@ class TestAdminResetConversation:
             headers={"x-admin-token": "wrong_token"},
         )
         assert resp.status_code == 403
+
+
+class TestMobilePhoneIntercept:
+    """Un iPhone hacia que el clasificador devolviera brand="apple" y el bot
+    contestara "¡Sí, gestionamos productos Apple!" derivando al WhatsApp
+    general. Los moviles no se reparan en Kelatos: respuesta fija de rechazo."""
+
+    def test_detects_phone_mentions(self):
+        from main import _mentions_mobile_phone
+        assert _mentions_mobile_phone("Se ha partido el conector Flex de la pantalla de mi iPhone 13 pro")
+        assert _mentions_mobile_phone("mi móvil Xiaomi no carga")
+        assert _mentions_mobile_phone("tengo un celular huawei roto")
+        assert not _mentions_mobile_phone("mi MacBook Pro no enciende")
+        assert not _mentions_mobile_phone("mi teléfono es 600111222")
+
+    async def test_iphone_not_redirected_as_apple(self, client, mock_intent, mock_openai_generate, _mock_external_services):
+        from intent_classifier import IntentResult
+        from main import MOBILE_PHONE_RESPONSE
+        mock_intent.return_value = IntentResult(brand="apple")
+
+        resp = await client.post("/webhook", json=_whatsapp_webhook_body(
+            "34600111222", "Se ha partido el conector Flex de la pantalla de mi iPhone 13 pro"))
+
+        assert resp.status_code == 200
+        mock_openai_generate.generate_response.assert_not_called()
+        sent = str(_mock_external_services["whatsapp"].send_message.call_args)
+        assert "no trabajamos con teléfonos móviles" in sent
+        assert "649 970 128" not in sent

@@ -2,6 +2,7 @@ import logging
 import json
 import re
 import time
+import unicodedata
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from fastapi import FastAPI, Request, Response, HTTPException, Query
@@ -127,6 +128,30 @@ def _out_of_scope_brand_redirect(brand: str) -> str:
         f"*{KELATOS_GENERAL_WHATSAPP}*\n\n"
         "Allí te confirman todos los detalles 👍"
     )
+
+# Telefonos moviles: Kelatos no los repara en ninguna linea (ver "reparación o
+# recuperación de datos de teléfonos móviles" en config.py). El clasificador
+# deduce brand="apple" de "iPhone" (o "xiaomi"/"huawei" de sus moviles) y el
+# intercept de marca respondia "¡Sí, gestionamos productos Apple!" derivando al
+# WhatsApp general — incorrecto. Se excluyen moviles antes de ese intercept.
+# No se incluye "teléfono" a secas: suele ser el número de contacto del cliente.
+_MOBILE_PHONE_RE = re.compile(
+    r"(?<!\w)(iphone|smartphone|smartphones|movil|moviles|celular|celulares|"
+    r"telefono movil|telefonos moviles|galaxy s\d+|redmi|pixel \d+)(?!\w)"
+)
+
+MOBILE_PHONE_RESPONSE = (
+    "Lo sentimos, en Kelatos no trabajamos con teléfonos móviles "
+    "(iPhone, Samsung, Xiaomi…), ni reparación ni recuperación de datos 🙏\n\n"
+    "Este número atiende equipos Dyson; si tienes alguno, cuéntanos y te ayudamos 😊"
+)
+
+
+def _mentions_mobile_phone(text: str) -> bool:
+    normalized = unicodedata.normalize("NFKD", (text or "").lower())
+    normalized = "".join(c for c in normalized if not unicodedata.combining(c))
+    return bool(_MOBILE_PHONE_RE.search(normalized))
+
 
 # Etiqueta que n8n añade a la conversación mientras espera la respuesta del
 # cliente a la encuesta de satisfacción. Si está presente, el bot debe
@@ -437,9 +462,14 @@ async def receive_message(request: Request):
             ai_response = BUDGET_DECISION_RESPONSE
             logger.info("Budget decision intercepted (WhatsApp), returning fixed response.")
         elif intent.brand and intent.brand != "dyson" and intent.brand in KNOWN_BRANDS:
-            # Intercept: marca del grupo Kelatos que no es Dyson — respuesta fija, sin LLM
-            ai_response = _out_of_scope_brand_redirect(intent.brand)
-            logger.info(f"Out-of-scope brand '{intent.brand}' intercepted (WhatsApp), returning fixed redirect.")
+            if _mentions_mobile_phone(text):
+                # Intercept: movil (iPhone, Xiaomi...) — no se repara en Kelatos, no derivar
+                ai_response = MOBILE_PHONE_RESPONSE
+                logger.info(f"Mobile phone ('{intent.brand}') intercepted (WhatsApp), returning fixed refusal.")
+            else:
+                # Intercept: marca del grupo Kelatos que no es Dyson — respuesta fija, sin LLM
+                ai_response = _out_of_scope_brand_redirect(intent.brand)
+                logger.info(f"Out-of-scope brand '{intent.brand}' intercepted (WhatsApp), returning fixed redirect.")
         else:
         # Generate AI response
             ai_response = await openai_svc.generate_response(
@@ -1066,9 +1096,14 @@ async def chatwoot_webhook(request: Request):
             ai_response = BUDGET_DECISION_RESPONSE
             logger.info("Budget decision intercepted (Chatwoot), returning fixed response.")
         elif intent.brand and intent.brand != "dyson" and intent.brand in KNOWN_BRANDS:
-            # Intercept: marca del grupo Kelatos que no es Dyson — respuesta fija, sin LLM
-            ai_response = _out_of_scope_brand_redirect(intent.brand)
-            logger.info(f"Out-of-scope brand '{intent.brand}' intercepted (Chatwoot), returning fixed redirect.")
+            if _mentions_mobile_phone(content):
+                # Intercept: movil (iPhone, Xiaomi...) — no se repara en Kelatos, no derivar
+                ai_response = MOBILE_PHONE_RESPONSE
+                logger.info(f"Mobile phone ('{intent.brand}') intercepted (Chatwoot), returning fixed refusal.")
+            else:
+                # Intercept: marca del grupo Kelatos que no es Dyson — respuesta fija, sin LLM
+                ai_response = _out_of_scope_brand_redirect(intent.brand)
+                logger.info(f"Out-of-scope brand '{intent.brand}' intercepted (Chatwoot), returning fixed redirect.")
         else:
         # Generate AI response
             ai_response = await openai_svc.generate_response(
