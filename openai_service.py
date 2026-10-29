@@ -108,6 +108,34 @@ def _strip_filler(text: str) -> str:
     return cleaned
 
 
+INDEPENDENCE_LINE = "🔒 Somos un servicio técnico *independiente*: no vemos equipos en garantía de fabricante"
+
+
+def _ensure_independence_line(text: str) -> str:
+    """Añade la línea de servicio independiente al bloque de ventajas si falta.
+
+    El prompt la incluye en el bloque "✅ ... Garantía de 6 meses ...", pero el
+    modelo a veces resume el bloque a 4 líneas y la omite. Se inserta en código
+    justo después de la última línea ✅ del bloque que contiene la garantía.
+    """
+    if "independiente" in text.lower():
+        return text
+    lines = text.split("\n")
+    garantia_idx = next(
+        (i for i, line in enumerate(lines)
+         if line.lstrip().startswith("✅") and "garant" in line.lower() and "6 meses" in line.lower()),
+        None,
+    )
+    if garantia_idx is None:
+        return text
+    end = garantia_idx
+    while end + 1 < len(lines) and lines[end + 1].lstrip().startswith("✅"):
+        end += 1
+    indent = lines[end][: len(lines[end]) - len(lines[end].lstrip())]
+    lines.insert(end + 1, indent + INDEPENDENCE_LINE)
+    return "\n".join(lines)
+
+
 class OpenAIService:
     """Service for generating AI responses using OpenAI."""
 
@@ -174,6 +202,7 @@ class OpenAIService:
 
             reply = response.choices[0].message.content.strip()
             reply = _strip_filler(reply)
+            reply = _ensure_independence_line(reply)
             logger.info(f"OpenAI response ({self.model}): {reply[:100]}...")
             return reply
 

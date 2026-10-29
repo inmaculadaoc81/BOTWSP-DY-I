@@ -49,3 +49,33 @@ class TestStripFiller:
         text = "El diagnostico es gratuito. Quedo a tu disposición para lo que necesites."
         result = _strip_filler(text)
         assert "Quedo a tu disposición" not in result
+
+
+class TestEnsureIndependenceLine:
+    BLOCK = (
+        "Lo bueno es que trabajamos con total transparencia:\n\n"
+        "✅ Diagnóstico *GRATUITO* con un técnico\n"
+        "✅ Presupuesto en *24-48h* sin compromiso\n"
+        "✅ Solo pagas si la reparación se realiza con éxito\n"
+        "✅ Garantía de *6 meses* en cada reparación\n\n"
+        "Puedes traerlo directamente al local."
+    )
+
+    def test_inserts_after_benefits_block(self):
+        from openai_service import _ensure_independence_line, INDEPENDENCE_LINE
+        result = _ensure_independence_line(self.BLOCK)
+        assert f"✅ Garantía de *6 meses* en cada reparación\n{INDEPENDENCE_LINE}\n\nPuedes" in result
+
+    def test_inserts_after_last_check_line(self):
+        from openai_service import _ensure_independence_line, INDEPENDENCE_LINE
+        text = self.BLOCK.replace("reparación\n\n", "reparación\n✅ +1.100 reseñas\n\n")
+        assert f"✅ +1.100 reseñas\n{INDEPENDENCE_LINE}" in _ensure_independence_line(text)
+
+    def test_no_change_if_already_present(self):
+        from openai_service import _ensure_independence_line
+        text = self.BLOCK + "\nSomos un servicio técnico independiente."
+        assert _ensure_independence_line(text) == text
+
+    def test_no_change_without_block(self):
+        from openai_service import _ensure_independence_line
+        assert _ensure_independence_line("Hola, ¿en qué te ayudo?") == "Hola, ¿en qué te ayudo?"
