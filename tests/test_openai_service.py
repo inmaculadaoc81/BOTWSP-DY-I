@@ -79,3 +79,15 @@ class TestEnsureIndependenceLine:
     def test_no_change_without_block(self):
         from openai_service import _ensure_independence_line
         assert _ensure_independence_line("Hola, ¿en qué te ayudo?") == "Hola, ¿en qué te ayudo?"
+
+
+class TestOpeningCalendar:
+    def test_holiday_monday_is_closed(self):
+        from datetime import datetime
+        from openai_service import _build_opening_calendar, _MADRID_TZ
+        # Viernes 30/10/2026: el lunes siguiente (2/11) es festivo
+        calendar = _build_opening_calendar(datetime(2026, 10, 30, 18, 12, tzinfo=_MADRID_TZ))
+        assert "- lunes 2 de noviembre: CERRADO (festivo)" in calendar
+        assert "- sábado 31 de octubre: CERRADO (fin de semana)" in calendar
+        assert "- martes 3 de noviembre: ABIERTO 09:30-18:00" in calendar
+        assert "- lunes 9 de noviembre: CERRADO (festivo)" in calendar

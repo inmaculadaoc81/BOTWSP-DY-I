@@ -39,6 +39,22 @@ def _is_business_day(dt: datetime) -> bool:
     return dt.weekday() < 5 and dt.strftime("%m-%d") not in _HOLIDAYS
 
 
+def _build_opening_calendar(now: datetime, days: int = 14) -> str:
+    """Una línea por día con su estado: sin esto el modelo no sabe que un
+    día futuro es festivo y contesta "sí, abrimos" a "¿atendéis este lunes?"."""
+    lines = []
+    for offset in range(1, days + 1):
+        day = now + timedelta(days=offset)
+        if day.strftime("%m-%d") in _HOLIDAYS:
+            estado = "CERRADO (festivo)"
+        elif day.weekday() >= 5:
+            estado = "CERRADO (fin de semana)"
+        else:
+            estado = "ABIERTO 09:30-18:00"
+        lines.append(f"- {_DIAS_SEMANA[day.weekday()]} {day.day} de {_MESES[day.month - 1]}: {estado}")
+    return "\n".join(lines)
+
+
 def _build_temporal_context() -> str:
     now = datetime.now(_MADRID_TZ)
     fecha = f"{_DIAS_SEMANA[now.weekday()]} {now.day} de {_MESES[now.month - 1]} de {now.year}"
@@ -73,7 +89,11 @@ def _build_temporal_context() -> str:
         f"Zona horaria: Europe/Madrid\n"
         f"Estado del local: {estado} (horario L-V 09:30-18:00)\n"
         f"Próxima apertura: {proximo}\n"
+        f"Calendario del local (próximos 14 días):\n{_build_opening_calendar(now)}\n"
         f"IMPORTANTE: Usa ÚNICAMENTE estos datos para determinar el día y horario actual. "
+        f"Si el cliente pregunta si abrimos un día concreto (\"este lunes\", \"el día 2\"...), "
+        f"búscalo en este calendario y responde según lo que indique: si pone CERRADO (festivo), "
+        f"di que ese día es festivo y estamos cerrados, y ofrece el siguiente día ABIERTO. "
         f"NO calcules ni asumas días festivos ni días de la semana distintos a los indicados aquí."
     )
     return ctx
