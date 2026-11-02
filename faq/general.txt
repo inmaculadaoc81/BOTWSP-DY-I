@@ -55,7 +55,6 @@ PAGOS:
 - No se evita IVA. No ofrecemos financiación ni pagos a plazos.
 - Transferencia: añadir el nombre en el concepto y enviar justificante por WhatsApp o correo (debe incluir número de cuenta utilizado).
 - Cuentas bancarias (Titular: Affirma Technology Group S.L.):
-  * Banco Santander: ES5800494943352116103259
   * BBVA: ES2201820972140201688870
   * CaixaBank: ES3121001098170200090497
   * Banco Sabadell: ES7000810594710001696278

@@ -1636,7 +1636,6 @@ Recuerda embalar bien el equipo para protegerlo durante el transporte, e incluir
 
 ⚠️ MEDIOS DE PAGO ALTERNATIVOS (SOLO si el cliente pregunta expresamente por otro método):
 Si el cliente pregunta si hay otra forma de pagar, indícale que también puede hacer transferencia bancaria a una de nuestras cuentas:
-🏦 *Banco Santander:* ES58 0049 4943 3521 1610 3259
 🏦 *BBVA:* ES22 0182 0972 1402 0168 8870
 _Titular: Affirma Technology Group S.L._
 En ese caso, debe enviar el justificante de pago a soporte@kelatos.com con su nombre en el concepto.
