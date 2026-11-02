@@ -318,8 +318,15 @@ async def receive_message(request: Request):
             logger.info(f"Duplicate WhatsApp webhook delivery ignored (id={message_id})")
             return {"status": "duplicate_ignored"}
 
-        # Only handle text messages for now
-        if msg_type != "text":
+        # Si el mensaje trae imagen/video/documento CON texto (caption), no se
+        # descarta: se procesa ese texto como un mensaje normal y se avisa en
+        # el prompt que no se puede ver el adjunto.
+        caption = None
+        if msg_type in ("image", "video", "document"):
+            caption = (message.get(msg_type) or {}).get("caption")
+
+        # Only handle text messages for now (un caption cuenta como texto)
+        if msg_type != "text" and not caption:
             logger.info(f"Ignoring non-text message type: {msg_type}")
             if not _should_send_attachment_notice(sender):
                 logger.info(f"Attachment notice suppressed for {sender} (cooldown)")
@@ -348,7 +355,7 @@ async def receive_message(request: Request):
             )
             return {"status": "non-text ignored"}
 
-        text = message["text"]["body"]
+        text = message["text"]["body"] if msg_type == "text" else caption
         logger.info(f"Message from {sender}: {text}")
 
         # Per-phone rate limiting
@@ -421,6 +428,18 @@ async def receive_message(request: Request):
 
         if session_context_wa:
             extra_context_parts.append(session_context_wa)
+
+        if caption:
+            extra_context_parts.append(
+                "[ADJUNTO RECIBIDO]\n"
+                "El cliente envió una imagen/video junto con este texto. INSTRUCCIONES "
+                "OBLIGATORIAS para tu respuesta: 1) responde normalmente a lo que escribió en "
+                "el texto (síguelo como un mensaje de texto normal), Y 2) indica con amabilidad "
+                "que todavía no puedes ver el contenido de imágenes/videos, así que si su "
+                "consulta depende de algo que solo se ve ahí (ej: 'esta pieza', 'este fallo', "
+                "'aquí tienes'), que lo describa también con palabras. Ambas partes van SIEMPRE "
+                "juntas en la misma respuesta, nunca solo una de las dos."
+            )
 
         needs_repair = intent.needs_repair_lookup or _looks_like_resguardo(text)
         if needs_repair:
@@ -910,9 +929,12 @@ async def chatwoot_webhook(request: Request):
                     # con el procesamiento normal del bot para no dejar al
                     # cliente sin respuesta.
 
-        # Detect attachments (images, audio, video, files) or empty content
+        # Detect attachments (images, audio, video, files) or empty content.
+        # Si llega texto junto con el adjunto (caption), no se descarta: se
+        # procesa ese texto como un mensaje normal y se avisa en el prompt
+        # que no se puede ver el adjunto.
         attachments = body.get("attachments", [])
-        if attachments or not content:
+        if not content:
             if attachments:
                 file_type = attachments[0].get("file_type", "file")
                 logger.info(f"Received {file_type} attachment in conversation {conversation_id}")
@@ -926,6 +948,9 @@ async def chatwoot_webhook(request: Request):
             else:
                 logger.info(f"Attachment notice suppressed for conversation {conversation_id} (cooldown)")
             return {"status": "non-text ignored"}
+        if attachments:
+            file_type = attachments[0].get("file_type", "file")
+            logger.info(f"Received {file_type} attachment with text in conversation {conversation_id}")
 
         # Ignore non-text content_type
         content_type = body.get("content_type", "text")
@@ -1055,6 +1080,18 @@ async def chatwoot_webhook(request: Request):
                 f"Revisa el historial para identificar el tema de la última consulta y saluda en consecuencia."
             )
             logger.info(f"Returning session detected for {sender_key} (gap: {gap_hours:.1f}h)")
+
+        if attachments and content:
+            extra_context_parts.append(
+                "[ADJUNTO RECIBIDO]\n"
+                "El cliente envió una imagen/video/archivo junto con este texto. INSTRUCCIONES "
+                "OBLIGATORIAS para tu respuesta: 1) responde normalmente a lo que escribió en "
+                "el texto (síguelo como un mensaje de texto normal), Y 2) indica con amabilidad "
+                "que todavía no puedes ver el contenido de imágenes/videos/archivos, así que si "
+                "su consulta depende de algo que solo se ve ahí (ej: 'esta pieza', 'este fallo', "
+                "'aquí tienes'), que lo describa también con palabras. Ambas partes van SIEMPRE "
+                "juntas en la misma respuesta, nunca solo una de las dos."
+            )
 
         needs_repair = intent.needs_repair_lookup or _looks_like_resguardo(content)
         if needs_repair:
