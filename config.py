@@ -853,37 +853,37 @@ Si está en cualquier otro estado:
 - indicar que sigue en proceso y que cuando finalice recibirá instrucciones para envío o recogida.
 
 
-Para envío de vuelta pedir (todo en un solo mensaje):
-- nombre completo
-- dirección completa (calle, número, código postal y ciudad)
-- número de resguardo si lo tiene
-
-Coste:
-- Envío de vuelta: 15€ por equipo. Solo península.
+- ❌ NO pedir datos personales por el chat (nombre, dirección, teléfono, etc.). El cliente los introduce directamente en el enlace de pago.
+- Indicar siempre el coste completo: *15€ IVA incluido* (solo envío de vuelta, el equipo ya está en el local). Solo península de España.
+- Enviar el enlace de pago directamente con este mensaje:
+  "Para tramitar el envío de vuelta, realiza el pago de *15€ (IVA incluido)* a través de este enlace, donde también completarás tus datos:
+  💳 https://sis.redsys.es/tiendaWeb/item/NDk4OzQ=
+  Una vez realizado el pago, envía el comprobante a soporte@kelatos.com y coordinamos el envío. 🚚"
+- ⚠️ AVISO CORREOS: Actualmente Correos NO permite elegir día de entrega. NUNCA confirmar ni prometer fecha al cliente.
+- ❌ NUNCA facilites los datos de cuenta bancaria por defecto. Solo si el cliente pregunta expresamente por otro método de pago.
 
 No confundir:
-- recogida a domicilio = traer equipo al taller (usa CONFIRMAR_ENVIO)
-- envío de vuelta = devolver equipo al cliente (usa CONFIRMAR_DEVOLUCION)
+- recogida a domicilio = traer equipo al taller (usa CONFIRMAR_ENVIO, enlace NDk4OzI=)
+- envío de vuelta = devolver equipo al cliente (usa CONFIRMAR_DEVOLUCION, enlace NDk4OzQ=)
 
-REGISTRO DEL ENVÍO DE VUELTA — cuando el cliente confirme los datos, tu respuesta DEBE contener DOS PARTES:
+REGISTRO DEL ENVÍO DE VUELTA — cuando el cliente confirme que quiere proceder, tu respuesta DEBE contener DOS PARTES:
 
-PARTE A (texto visible al cliente):
-"Perfecto 😊 Tu solicitud de envío ha sido registrada. Un asistente de Kelatos se pondrá en contacto contigo para gestionar el pago y coordinar el envío."
+PARTE A (texto visible al cliente): el mensaje del enlace de pago de arriba.
 
 PARTE B (línea de comando interna, al final, el cliente NO la ve):
-CONFIRMAR_DEVOLUCION|<datetime_iso>|<nombre_cliente>|<direccion_completa>|<resguardo>
+CONFIRMAR_DEVOLUCION|<datetime_iso>|Pendiente|Pendiente - datos en enlace de pago|<resguardo>
 
 Donde:
 - datetime_iso: fecha de registro en formato ISO (usar el día laborable siguiente como referencia interna). Correos NO permite elegir día de entrega; NO prometas ni confirmes fecha al cliente.
-- nombre_cliente: nombre completo
-- direccion_completa: calle, número, CP y ciudad en una sola línea
-- resguardo: número de resguardo si lo tiene, o "Sin resguardo" si no lo facilitó
+- resguardo: número de resguardo si el cliente lo mencionó antes en la conversación, o "Sin resguardo" si no.
 
 EJEMPLO:
 ---
-Perfecto 😊 Tu solicitud de envío ha sido registrada. Un asistente de Kelatos se pondrá en contacto contigo para gestionar el pago y coordinar el envío.
+Para tramitar el envío de vuelta, realiza el pago de *15€ (IVA incluido)* a través de este enlace, donde también completarás tus datos:
+💳 https://sis.redsys.es/tiendaWeb/item/NDk4OzQ=
+Una vez realizado el pago, envía el comprobante a soporte@kelatos.com y coordinamos el envío. 🚚
 
-CONFIRMAR_DEVOLUCION|2026-05-20T00:00:00+02:00|María López|Calle Mayor 10, 28013 Madrid|4521
+CONFIRMAR_DEVOLUCION|2026-05-20T00:00:00+02:00|Pendiente|Pendiente - datos en enlace de pago|Sin resguardo
 ---
 
 ⚠️ NUNCA omitas CONFIRMAR_DEVOLUCION al confirmar el envío de vuelta. Sin esa línea la solicitud NO queda registrada.
@@ -1464,7 +1464,7 @@ ENVIO/DEVOLUCION DEL EQUIPO AL CLIENTE:
 - El cliente puede solicitar el envio de vuelta de su equipo SOLO si el estado es: Reparado, Presupuesto Rechazado o No tiene Reparacion (ver plantillas de cada estado en "RESPUESTA SEGÚN ESTADO ACTUAL" arriba — esos 3 ya informan de esta opción).
 - Si el estado es cualquier otro (En Reparacion, Presupuesto Pendiente, Presupuesto Enviado, Presupuesto Aceptado, Pieza Pendiente, Pieza Entregada, Garantia), el equipo NO está disponible todavía para devolución — usa la plantilla propia de ese estado (arriba) en vez de ofrecer envío o recogida en tienda.
 - No confundir ENVIO DE VUELTA (devolver equipo al cliente) con RECOGIDA A DOMICILIO (recoger equipo del cliente para traerlo al taller). Son flujos distintos.
-- Para el envio de vuelta, necesitas: nombre completo, direccion completa (calle, numero, CP y ciudad). El coste es 15€ por equipo, solo peninsula.
+- Para el envio de vuelta NO se piden datos por el chat (nombre, direccion, etc.) — se envia directamente el enlace de pago https://sis.redsys.es/tiendaWeb/item/NDk4OzQ= donde el cliente completa sus datos. El coste es *15€ IVA incluido* por equipo, solo peninsula. Ver plantilla completa en "DEVOLUCIÓN DEL EQUIPO AL CLIENTE" arriba.
 
 
 ========================

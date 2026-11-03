@@ -445,6 +445,8 @@ def extract_confirmation_command(ai_response: str) -> dict | None:
 
         if line.startswith("CONFIRMAR_DEVOLUCION|"):
             # Format: CONFIRMAR_DEVOLUCION|datetime_iso|nombre|direccion|resguardo
+            # El cliente completa nombre y direccion en el enlace de pago, no por el
+            # chat, asi que esos campos suelen venir vacios ("Pendiente").
             parts = line.split("|", 4)
             if len(parts) != 5:
                 logger.warning("Formato inválido en CONFIRMAR_DEVOLUCION", extra={"line": line})
@@ -533,7 +535,8 @@ def _validate_appointment(
         and "domicilio" in (command.get("modalidad") or "").strip().lower()
     )
     es_envio_domicilio = cmd_type == "envio"
-    if not es_alquiler_domicilio and not es_envio_domicilio and not _is_real_name(customer_name):
+    es_devolucion = cmd_type == "devolucion"
+    if not es_alquiler_domicilio and not es_envio_domicilio and not es_devolucion and not _is_real_name(customer_name):
         missing.append("nombre completo del cliente")
 
     # Motivo: solo para cita y envio (no para alquiler en tienda). Para envio, el motivo
@@ -547,7 +550,7 @@ def _validate_appointment(
     # El cliente completa sus datos (nombre, direccion, DNI, email) directamente en el enlace de pago.
     es_alquiler = cmd_type == "alquiler"
 
-    if not es_alquiler and not es_envio_domicilio:
+    if not es_alquiler and not es_envio_domicilio and not es_devolucion:
         # Email: tiene que estar en algun mensaje del cliente.
         if not _EMAIL_RE.search(history_text):
             missing.append("correo electronico")
@@ -582,14 +585,6 @@ def _validate_appointment(
                     missing.append("hora entre las 10:00 y las 17:00 (último slot a las 17:00 en punto)")
         except (ValueError, KeyError, TypeError):
             missing.append("fecha y hora valida")
-
-    # Direccion: obligatoria para devoluciones (envio de vuelta al cliente tras reparar,
-    # no tiene enlace de pago con formulario). Para recogida (envio) NO se pide: el cliente
-    # completa la direccion directamente en el enlace de pago.
-    if command.get("type") == "devolucion":
-        address = (command.get("address") or "").strip()
-        if not address or len(address.split()) < 3 or not any(c.isdigit() for c in address):
-            missing.append("direccion completa (calle, numero, codigo postal y ciudad)")
 
     if command.get("type") == "alquiler":
         if not (command.get("tipo_equipo") or "").strip():
@@ -792,30 +787,28 @@ async def process_ai_calendar_command(
             user_message = f"✅ Hemos recibido tu solicitud de alquiler.\n\n{payment_msg}"
 
     elif command["type"] == "devolucion":
+        # El cliente completa nombre y direccion directamente en el enlace de pago,
+        # no por el chat, asi que esos campos vienen vacios ("Pendiente").
         resguardo_info = f"\nNº Resguardo: {command['resguardo']}" if command.get("resguardo") else ""
-        description = (
-            f"Dirección de envío: {command['address']}"
-            f"{resguardo_info}\n"
-            f"Teléfono cliente: {attendee_phone}"
-        )
+        description = f"Envío de vuelta - datos en enlace de pago{resguardo_info}\nTeléfono cliente: {attendee_phone}"
         created_event = await calendar_service.create_event(
-            title=f"ENVIO: {command['customer_name']}",
+            title="ENVIO DE VUELTA: Pendiente",
             start_iso=command["datetime_iso"],
             duration_minutes=30,
             description=description,
             attendee_phone=attendee_phone,
         )
 
+        payment_msg = (
+            "Para tramitar el envío de vuelta, realiza el pago de *15€ (IVA incluido)* "
+            "a través de este enlace, donde también completarás tus datos:\n\n"
+            "💳 https://sis.redsys.es/tiendaWeb/item/NDk4OzQ=\n\n"
+            "Una vez realizado el pago, envía el comprobante a soporte@kelatos.com y coordinamos el envío. 🚚"
+        )
+
         if created_event:
-            user_message = (
-                f"✅ Tu solicitud de envío ha sido registrada.\n\n"
-                f"📦 El equipo se enviará a: {command['address']}\n\n"
-                f"Un asistente de Kelatos se pondrá en contacto contigo para gestionar el pago y coordinar el envío. ¡Gracias! 😊"
-            )
+            user_message = f"✅ ¡Solicitud registrada!\n\n{payment_msg}"
         else:
-            user_message = (
-                "✅ Hemos recibido tu solicitud de envío.\n\n"
-                "Un asistente de Kelatos se pondrá en contacto contigo para gestionar el pago y coordinar el envío. ¡Gracias! 😊"
-            )
+            user_message = f"✅ Hemos recibido tu solicitud de envío.\n\n{payment_msg}"
 
     return user_message, created_event
