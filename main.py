@@ -348,7 +348,7 @@ async def receive_message(request: Request):
                     "¿Te gustaría agendar una recogida o tienes alguna pregunta? 😊"
                 )
             else:
-                response_text = "Por ahora solo puedo leer mensajes de texto. 😊"
+                response_text = "Por ahora no puedo ver imágenes, solo puedo leer mensajes de texto. 😊 ¿Podrías describir tu consulta con palabras?"
             await whatsapp_svc.send_message(
                 to=sender,
                 text=response_text,
@@ -943,7 +943,7 @@ async def chatwoot_webhook(request: Request):
             if _should_send_attachment_notice(f"chatwoot_{conversation_id}"):
                 await chatwoot_svc.send_message(
                     conversation_id,
-                    "Por ahora solo puedo leer mensajes de texto. 😊 ¿Podrías describir tu consulta con palabras?",
+                    "Por ahora no puedo ver imágenes, solo puedo leer mensajes de texto. 😊 ¿Podrías describir tu consulta con palabras?",
                 )
             else:
                 logger.info(f"Attachment notice suppressed for conversation {conversation_id} (cooldown)")
@@ -959,7 +959,7 @@ async def chatwoot_webhook(request: Request):
             if _should_send_attachment_notice(f"chatwoot_{conversation_id}"):
                 await chatwoot_svc.send_message(
                     conversation_id,
-                    "Por ahora solo puedo leer mensajes de texto. 😊 ¿Podrías describir tu consulta con palabras?",
+                    "Por ahora no puedo ver imágenes, solo puedo leer mensajes de texto. 😊 ¿Podrías describir tu consulta con palabras?",
                 )
             else:
                 logger.info(f"Attachment notice suppressed for conversation {conversation_id} (cooldown)")
