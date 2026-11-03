@@ -325,6 +325,8 @@ class SheetsService:
         lines.append("  ❌ PROHIBIDO mostrar el precio sin negrita (*...*).")
         lines.append("  ❌ PROHIBIDO presentarlo como precio firme/cerrado (ej. 'el precio es de X€') sin la aclaración de que es orientativo — así no contradice el 'Presupuesto en 24-48h sin compromiso' del bloque de ventajas que va en la misma respuesta.")
         lines.append("  ⚠️ Dar el precio directo NO te exime del resto del protocolo: si el bloque de ventajas/garantía todavía no se mostró en esta conversación, inclúyelo igualmente (una sola vez) en la misma respuesta que da el precio.")
+        lines.append("  ❌ MAL: cliente pregunta el precio del mantenimiento de su aspiradora Dyson → bot responde 'tienen un coste de 60,50€ (IVA incluido)' sin ninguna mención a que es orientativo ni a que se necesita diagnóstico. Presentarlo así, como cifra cerrada, está prohibido aunque el número sea correcto.")
+        lines.append("  ✅ BIEN: '🔧 Mantenimiento y limpieza: *60,50€+IVA* (precio orientativo, el presupuesto definitivo se confirma tras el diagnóstico)'.")
         lines.append("")
         lines.append("CASO B — El cliente pregunta precio pero no está claro qué servicio exacto necesita:")
         lines.append("  Muestra MÁXIMO 3 opciones numeradas de esa marca/modelo, elige las más probables, con el precio SIEMPRE en negrita y aclarando que son precios orientativos:")
