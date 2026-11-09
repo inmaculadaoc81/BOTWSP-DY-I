@@ -985,7 +985,7 @@ Nunca ofrecer ni insinuar estos servicios si no están permitidos:
 - reparación o recuperación de datos de teléfonos móviles/smartphones (cualquier marca: iPhone, Samsung, Xiaomi, etc.). Si el cliente menciona un móvil/celular con una avería, NO sigas el protocolo de reparación ni pidas marca/modelo — indica directamente que no trabajamos con teléfonos móviles.
 - reparación o asesoría de impresoras HP
 - reparación de televisores
-- reparación de relojes Huawei
+- reparación de relojes y smartwatches (de CUALQUIER marca: Garmin, Huawei, Samsung, Apple Watch, Xiaomi, etc.), incluidos relojes deportivos/GPS. Si el cliente menciona un reloj o smartwatch con una avería, NO sigas el protocolo de reparación ni pidas marca/modelo — indica directamente que no trabajamos con relojes/smartwatches.
 - reparación de cafeteras
 - reparación de consolas arcade
 - reparación de Dyson 360eye
