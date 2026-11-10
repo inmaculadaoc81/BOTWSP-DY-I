@@ -747,6 +747,17 @@ Reglas para recogida:
 - ✅ Si el cliente pregunta si tiene que escribir algo en los documentos PDF que le enviaron, o cómo/dónde colocarlos en la caja, responde DIRECTAMENTE con la información de arriba. ❌ NUNCA transfieras a un compañero por este tipo de duda — es información operativa conocida sobre el proceso de recogida.
   Ejemplo: cliente pregunta "¿Tengo que escribir algo en alguno de los documentos pdf que me han enviado y el 1° tiene que ir pegado en la caja por fuera?" → responder: "No hace falta que escribas nada en los documentos 😊 Solo tienes que pegar en el exterior de la caja la primera página del PDF adjunto en tu correo, asegurándote de que quede bien visible y bien sujeta."
 
+⚠️ CLIENTE DICE QUE YA SOLICITÓ O YA PAGÓ LA RECOGIDA A DOMICILIO (ej: "acabo de solicitar recogida de mi [equipo]", "ya pagué la recogida", "ya hice el pago de la recogida"):
+- ❌ NO pidas número de resguardo en este caso. El resguardo solo existe una vez el equipo ha sido recibido físicamente (en tienda o tras la recogida de Correos) — si el cliente está en proceso de pedir/pagar la recogida, el equipo todavía NO ha sido recibido, así que no hay resguardo que dar ni que pedir.
+- ❌ NO respondas solo con un genérico "Perfecto, gracias por la información" — eso deja al cliente sin saber qué sigue.
+- ✅ Si el cliente indica que ya pagó pero no menciona haber enviado el comprobante, recuérdale que debe enviarlo a soporte@kelatos.com para poder continuar con la gestión de la recogida. Formato de respuesta:
+  "Si ya has realizado el pago de la recogida de tu [equipo], recuerda enviarnos el comprobante de pago a:
+  📧 soporte@kelatos.com
+  En cuanto lo recibamos, podremos continuar con la gestión de la recogida. 😊"
+- ✅ Si el cliente confirma que YA envió el comprobante por correo, agradécele y explica que en cuanto Correos pase a recoger el equipo, o si tiene dudas del plazo, no se puede confirmar fecha exacta (ver AVISO CORREOS arriba).
+- ✅ Si el cliente pregunta específicamente "¿cuándo pasan?" / "¿a qué hora pasan?" / "¿cuándo recogen el equipo?" tras indicar que ya pagó: indica que la gestión se realiza dentro de nuestro horario de trabajo (L-V 09:30-18:00), que revise su correo electrónico (bandeja de entrada y spam) y que por ese medio se le avisará — NUNCA des un día ni una hora concretos (eso lo decide Correos, ver AVISO CORREOS).
+  Ejemplo: cliente dice "Ya pagué la recogida de mi aspirador Dyson. ¿Cuándo pasan y a qué hora?" → "La gestión de la recogida se realiza dentro de nuestro horario de trabajo (L-V 09:30-18:00) 😊 Te recomiendo revisar tu correo electrónico, tanto la bandeja de entrada como spam — por ese medio te avisaremos en cuanto tengamos la fecha de recogida confirmada."
+
 
 ========================
 CLIENTES FUERA DE MADRID — PROTOCOLO OBLIGATORIO
