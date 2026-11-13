@@ -347,6 +347,8 @@ async def receive_message(request: Request):
                     "(15€ recogida + 15€ envío de vuelta, solo península).\n\n"
                     "¿Te gustaría agendar una recogida o tienes alguna pregunta? 😊"
                 )
+            elif msg_type == "audio":
+                response_text = "Por ahora no puedo escuchar audios, solo puedo leer mensajes de texto. 😊 ¿Podrías escribir tu consulta con palabras?"
             else:
                 response_text = "Por ahora no puedo ver imágenes, solo puedo leer mensajes de texto. 😊 ¿Podrías describir tu consulta con palabras?"
             await whatsapp_svc.send_message(
@@ -935,15 +937,20 @@ async def chatwoot_webhook(request: Request):
         # que no se puede ver el adjunto.
         attachments = body.get("attachments", [])
         if not content:
+            file_type = None
             if attachments:
                 file_type = attachments[0].get("file_type", "file")
                 logger.info(f"Received {file_type} attachment in conversation {conversation_id}")
             else:
                 logger.info(f"Empty content in conversation {conversation_id}")
             if _should_send_attachment_notice(f"chatwoot_{conversation_id}"):
+                if file_type == "audio":
+                    notice_text = "Por ahora no puedo escuchar audios, solo puedo leer mensajes de texto. 😊 ¿Podrías escribir tu consulta con palabras?"
+                else:
+                    notice_text = "Por ahora no puedo ver imágenes, solo puedo leer mensajes de texto. 😊 ¿Podrías describir tu consulta con palabras?"
                 await chatwoot_svc.send_message(
                     conversation_id,
-                    "Por ahora no puedo ver imágenes, solo puedo leer mensajes de texto. 😊 ¿Podrías describir tu consulta con palabras?",
+                    notice_text,
                 )
             else:
                 logger.info(f"Attachment notice suppressed for conversation {conversation_id} (cooldown)")
