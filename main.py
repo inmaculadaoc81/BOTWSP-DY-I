@@ -946,6 +946,22 @@ async def chatwoot_webhook(request: Request):
             if _should_send_attachment_notice(f"chatwoot_{conversation_id}"):
                 if file_type == "audio":
                     notice_text = "Por ahora no puedo escuchar audios, solo puedo leer mensajes de texto. 😊 ¿Podrías escribir tu consulta con palabras?"
+                elif file_type in ("image", "video"):
+                    notice_text = (
+                        "¡Gracias por tu mensaje! 😊 Entiendo que quieres enviarnos fotos o videos, "
+                        "pero lamentablemente no nos es posible realizar un diagnóstico técnico preciso "
+                        "únicamente a través de imágenes o videos.\n\n"
+                        "Para que nuestros técnicos puedan evaluar correctamente tu equipo, necesitamos "
+                        "tenerlo físicamente en el local. 🔧\n\n"
+                        "Lo bueno es que:\n"
+                        "✅ El diagnóstico es *GRATUITO* para la mayoría de equipos (ordenadores, portátiles, "
+                        "consolas, Surface, Dyson, Thermomix...)\n"
+                        "✅ Para otros equipos tiene un coste de *20€ + IVA*, que se descuenta si decides reparar 💶\n\n"
+                        "📌 Puedes traerlo directamente al local 🏪 sin cita previa (L-V 09:30-18:00), "
+                        "o si lo prefieres, podemos ir a buscarlo con nuestro *servicio de recogida a domicilio* 🚚 "
+                        "(15€ recogida + 15€ envío de vuelta, solo península).\n\n"
+                        "¿Te gustaría agendar una recogida o tienes alguna pregunta? 😊"
+                    )
                 else:
                     notice_text = "Por ahora no puedo ver imágenes, solo puedo leer mensajes de texto. 😊 ¿Podrías describir tu consulta con palabras?"
                 await chatwoot_svc.send_message(
