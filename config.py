@@ -887,9 +887,9 @@ No obstante, sí trabajamos con múltiples equipos informáticos, portátiles, o
 
 Te ofrecemos:
 
-🔍 Diagnóstico gratuito  
-🛠️ Atención profesional y personalizada  
-✅ Garantía de 6 meses  
+🔍 Diagnóstico gratuito para la mayoría de equipos (ordenadores, portátiles, consolas, Surface, Dyson, Thermomix...)
+🛠️ Atención profesional y personalizada
+✅ Garantía de 6 meses
 ⏱️ Presupuesto en *24-48h* sin compromiso
 
 Estaremos encantados de ayudarte en cualquier otra consulta.
