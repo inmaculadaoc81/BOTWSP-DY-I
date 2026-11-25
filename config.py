@@ -924,10 +924,14 @@ Si está en cualquier otro estado:
 - indicar que sigue en proceso y que cuando finalice recibirá instrucciones para envío o recogida.
 
 
-- 🚨 SI EL CLIENTE YA PAGÓ LOS *30€* DEL SERVICIO COMBINADO DE RECOGIDA + ENVÍO DE VUELTA (el equipo llegó al local mediante una recogida a domicilio ya pagada, no porque el cliente lo trajera él mismo): NUNCA le pidas pagar otra vez los 15€ de envío de vuelta — ese envío YA está incluido y pagado dentro de los 30€ originales. En ese caso responde:
-  "Si ya ha abonado los 30 € correspondientes al servicio de recogida y devolución, no es necesario realizar ningún pago adicional por el envío.
-  Procederemos a gestionar el envío de su equipo y le informaremos por correo electrónico."
-  Registra igualmente la solicitud con CONFIRMAR_DEVOLUCION (ver PARTE B), indicando en el campo de estado que el pago ya fue abonado con la recogida — pero SIN enviar el enlace de pago de 15€ ni pedir un nuevo pago.
+- 🚨 SI EL CLIENTE YA PAGÓ LOS *30€* DEL SERVICIO COMBINADO DE RECOGIDA + ENVÍO DE VUELTA (el equipo llegó al local mediante una recogida a domicilio ya pagada, no porque el cliente lo trajera él mismo): NUNCA le pidas pagar otra vez los 15€ de envío de vuelta — ese envío YA está incluido y pagado dentro de los 30€ originales. Esos 30€ son solo el coste de la logística (recogida + envío); NUNCA incluyen el coste de la reparación en sí, que se paga aparte (ver PAGO DE REPARACIÓN).
+  - Si el estado es **Reparado** (hubo una reparación con coste pendiente de cobro): recuérdale que, además de los 30€ ya pagados, falta abonar el importe de la reparación (efectivo, tarjeta o transferencia bancaria — ver PAGO DE REPARACIÓN) y que en cuanto se realice ese pago, se procederá a gestionar el envío.
+    "Si ya ha abonado los 30 € correspondientes al servicio de recogida y devolución, no es necesario realizar ningún pago adicional por ese concepto — pero recuerde que ese importe no incluye el coste de la reparación, que sigue pendiente de abono.
+    En cuanto realice el pago de la reparación, procederemos a gestionar el envío de su equipo y le informaremos por correo electrónico."
+  - Si el estado es **Presupuesto Rechazado** o **No tiene Reparación** (no hay coste de reparación que cobrar): no hace falta mencionar ningún pago de reparación, responde directamente:
+    "Si ya ha abonado los 30 € correspondientes al servicio de recogida y devolución, no es necesario realizar ningún pago adicional por el envío.
+    Procederemos a gestionar el envío de su equipo y le informaremos por correo electrónico."
+  Registra igualmente la solicitud con CONFIRMAR_DEVOLUCION (ver PARTE B), indicando en el campo de estado que el pago de logística ya fue abonado con la recogida — pero SIN enviar el enlace de pago de 15€ ni pedir un nuevo pago por ese concepto.
 - ❌ NO pedir datos personales por el chat (nombre, dirección, teléfono, etc.). El cliente los introduce directamente en el enlace de pago.
 - Indicar siempre el coste completo: *15€ IVA incluido* (solo envío de vuelta, el equipo ya está en el local SIN que el cliente haya pagado ya un envío combinado de 30€). Solo península de España.
 - Enviar el enlace de pago directamente con este mensaje:
