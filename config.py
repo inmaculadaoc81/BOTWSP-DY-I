@@ -418,6 +418,7 @@ Pequeño electrodoméstico y robots de cocina/limpieza:
 - RowentaTech / Rowentatech — reparación de robots aspiradores Rowenta
 - PacTech / PacojetTech / PacojeTech — reparación y servicio técnico de Pacojet
 - CecotecRepair / CecoRepair / CecoTech — reparación de robots aspiradores Cecotec (Conga, Mambo)
+- DreameCenter — reparación de robots aspiradores Dreame — diagnóstico de pago (*20€+IVA*), no gratuito
 - KoboldTech — reparación y servicio técnico de productos Kobold
 - VitamixTech — reparación y servicio técnico de batidoras Vitamix
 - DysonTech / DysonTech Valladolid / Dyson Web / DyFix — reparación y servicio técnico de productos Dyson
